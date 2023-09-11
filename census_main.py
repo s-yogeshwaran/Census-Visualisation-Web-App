@@ -89,6 +89,58 @@ with beta_col3:
 if st.checkbox('Show summary'):
   st.table(census_df.describe())
 
+# Code for 'census_plots.py' file.
+# Import necessary modules.
+import streamlit as st
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Define a function 'app()' which accepts 'census_df' as an input.
+def app(census_df):
+  st.header('Visualise Data')
+  # Add a multiselect in the sidebar with label 'Select the Charts/Plots:'
+  # Store the current value of this widget in a variable 'plot_list'.
+  plot_list = st.multiselect("Select the Charts/Plots: ", ('Pie Chart', 'Box Plot', 'Count Plot'))
+
+  # Display count plot using seaborn module and 'st.pyplot()' 
+  if 'Count Plot' in plot_list:
+    st.subheader('Count plot for distribution of records for unique workclass groups')
+    plt.figure(figsize = (16,8), dpi = 90)
+    sns.countplot(x = 'workclass', hue = 'income', data = census_df)
+    plt.xticks(label = census_df['workclass'].unique(), rotation = 45)
+    st.pyplot()
+
+  # Display pie plot using matplotlib module and 'st.pyplot()'
+  if 'Pie Chart' in plot_list:
+    st.subheader('Pie Chart')
+    plt.figure(figsize = (12,8))
+    plt.title('Distribution of records for the income groups')
+    pie_data = census_df['income'].value_counts()
+    plt.pie(pie_data, labels = pie_data.index, autopct = '%1.2f%%', 
+            startangle = 25, explode = np.linspace(0.03, 0.03, 2))
+    st.pyplot()
+
+    plt.figure(figsize = (12,8))
+    plt.title('Distribution of records for the gender group')
+    pie_data = census_df['gender'].value_counts()
+    plt.pie(pie_data, labels = pie_data.index, autopct = '%1.2f%%', 
+            startangle = 25, explode = np.linspace(0.03, 0.03, 2))
+    st.pyplot()
+
+  # Display box plot using matplotlib module and 'st.pyplot()'
+  if 'Box Plot' in plot_list:
+    st.subheader('Box Plot for the Hours Worked Per Week')
+    plt.figure(figsize = (17,8))
+    plt.title('Difference in the range of values for the hours-per-week feature for different income groups')
+    sns.boxplot(x = census_df['hours-per-week'], y = census_df['income'])
+    st.pyplot()
+
+    plt.figure(figsize = (17,8))
+    plt.title('Difference in the range of values for the hours-per-week feature for different gender groups')
+    sns.boxplot(x = census_df['hours-per-week'], y = census_df['gender'])
+    st.pyplot()
+
 
 
 
